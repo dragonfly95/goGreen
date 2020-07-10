@@ -92,12 +92,14 @@ public class UsedBoardController {
 	   // 수정
 	   @RequestMapping(value = "uModify.do")
 	   public ModelAndView uModify(ModelAndView mv, int usedId) {
+		   mv.setViewName("used/usedModify");
 		   return mv;
 	   }
 
 		// 글쓰기
 		@RequestMapping(value = "uWrite.do")
 		public ModelAndView uWrite(ModelAndView mv) {
+			mv.setViewName("used/usedWrite");
 			return mv;
 		}
 
