@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="myCampMapper">
+
+	<resultMap type="MyCamp" id="myCampResultSet">
+		<id property="mycNo" column="MYCNO"/>
+		<result property="mycTitle" column="MYCTITLE"/>
+		<result property="mycDetail" column="MYCDETAIL"/>
+		<result property="mycTag" column="MYCTAG"/>
+		<result property="mycWriteDate" column="MYCWRITEDATE"/>
+		<result property="mycModifyDate" column="MYCMMODIFYDATE"/>
+		<result property="mycViewCnt" column="MYCVIEWCNT"/>
+		<result property="mycLikeCnt" column="MYCLIKECNT"/>
+		<result property="mycStatusYN" column="MYCSTATUSYN"/>
+	<!-- 	<result property="commentStar" column="commentStar"/>
+		<result property="mId" column="mId"/> -->
+	</resultMap>
+	
+	<!-- 리스트 조회 -->
+	<select id="selectList" resultMap="myCampResultSet">
+		SELECT *
+		FROM MYCAMP
+		ORDER BY MYCNO DESC
+	</select>
+	
+	<!-- 페이징 처리를 위한 게시글 수 조회 -->
+	<select id="getListCount" resultType="_int">
+		SELECT COUNT(*) 
+		FROM MYCAMP
+		WHERE MYCSTATUSYN = 'Y'
+	</select>
+	
+	<!-- 게시글 상세조회 -->
+	<select id="selectOne" parameterType="_int" resultMap="myCampResultSet">
+		SELECT *
+		FROM MYCAMP
+		WHERE MYCNO = #{mycNo}
+		AND MYCSTATUSYN = 'Y'
+	</select>
+	
+	<!-- SELECT *
+		FROM MYCAMP
+		WHERE MYCNO = #{mycNo}
+		AND MYCSTATUSYN = 'Y' -->
+	
+	<!-- 조회수 증가 -->
+	<update id="updateCount" parameterType="_int">
+		UPDATE MYCAMP
+		SET MYCVIEWCNT = MYCVIEWCNT +1
+		WHERE MYCNO = #{mycNo}
+	</update>
+	
+	<!-- 게시글 수정쿼리 -->
+	<update id="updateMyCamp" parameterType="MyCamp">
+		UPDATE MYCAMP
+		SET MYCTITLE=#{mycTitle}, MYCDETAIL=#{mycDetail},
+		MYCTAG=#{mycTag}, MYCDATE=SYSDATE
+		WHERE MYCNO=#{mycNo}
+	</update>
+
+	<!-- 게시글 삭제쿼리 -->
+	<delete id="deleteMyCamp" parameterType="_int">
+		DELETE FROM MYCAMP
+		WHERE MYCNO=#{mycNo}
+	</delete>
+	
+</mapper>

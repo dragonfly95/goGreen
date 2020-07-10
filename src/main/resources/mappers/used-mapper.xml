@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="usedBoardMapper">
+ 
+	<resultMap type="UsedBoard" id="usedBoardResultSet">
+		<id property="usedId" column="USEDID" />
+		<result property="usedTitle" column="USED_TITLE"/>
+		<result property="usedWriter" column="USED_WRITER"/>
+		<result property="usedContent" column="USED_CONTENT"/>
+		<result property="usedOriginalFileName" column="USED_ORIGINAL_FILENAME"/>
+		<result property="usedRenameFileName" column="USED_RENAME_FILENAME"/>
+		<result property="usedCount" column="USED_COUNT" />
+		<result property="usedCreateDate" column="USED_CREATE_DATE" />
+		<result property="usedStatus" column="USED_STATUS" />
+	</resultMap>
+
+	<resultMap type="UsedReply" id="usedReplyResultSet">
+		<id property="usedRId" column="USED_R_ID" />
+		<result property="usedRContent" column="USED_R_CONTENT" />
+		<result property="usedRefRid" column="USED_REF_ID" />
+		<result property="usedRWriter" column="USED_R_WRITER" />
+		<result property="usedRCreateDate" column="USED_RCREATEDATE" />
+	</resultMap>
+
+		<select id="getUsedListCount" resultType="_int">
+			SELECT COUNT(*) 
+			FROM USEDBOARD
+			WHERE USED_STATUS = 'Y'
+		</select>
+
+		<select id="selectUsedList" resultMap="usedBoardResultSet">
+			SELECT *
+			FROM USEDBOARD
+			ORDER BY M_ID DESC
+		</select>
+
+		<update id="updateUsedCount" parameterType="_int">
+			UPDATE USEDBOARD
+			SET USED_COUNT = USED_COUNT + 1
+			WHERE M_ID = #{usedId}
+		</update>
+	
+		<select id="selectUsedOne" resultMap="usedBoardResultSet">
+			SELECT *
+			FROM USEDBOARD
+			WHERE M_ID = #{usedId}
+			AND USED_STATUS = 'Y'
+		</select>
+		
+		<select id="selectUsedReplyList" resultMap="usedReplyResultSet" parameterType="_int">
+			SELECT *
+			FROM USEDREPLY UR
+			JOIN USEDBOARD UR ON (R.REF_BID = B.BID) 
+			WHERE REF_UID = #{usedId}
+			ORDER BY USEDID DESC
+		</select>
+
+		<insert id="insertUsedReply" parameterType="UsedReply">
+			INSERT INTO USEDREPLY VALUES
+			(SEQ_RID.NEXTVAL, #{usedRContent}, #{usedRefUId }, #{usedRWriter}, SYSDATE, SYSDATE, DEFAULT)
+		</insert>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
