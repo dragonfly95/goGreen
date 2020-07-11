@@ -14,8 +14,9 @@
 		<!-- destroy-method="close"은 끝날때 닫는다 -->
 	<!-- class들에 있는 내용은 실제 존재하는 클래스  -->
 	<!-- 서비스에 있는 DB연동하는 소스 -->
+
     <!-- h2 database -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
         <property name="driverClassName" value="org.h2.Driver" />
         <property name="url" value="jdbc:h2:~/greendb" />
         <property name="username" value="sa" />
@@ -26,6 +27,18 @@
         <jdbc:script location="classpath:schema.sql"/>
     </jdbc:initialize-database>
 -->
+
+
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+		<constructor-arg ref="dataSourceSpied" />
+		<property name="logFormatter">
+			<bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+				<property name="loggingType" value="MULTI_LINE" />
+				<property name="sqlPrefix" value="SQL         :  "/>
+			</bean>
+		</property>
+	</bean>
+
 	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
@@ -34,7 +47,6 @@
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<constructor-arg ref="sqlSession" />
 	</bean>
-
 
 	
 	<!-- 파일 업로드 관련 Bean등록 : pom.xml에 라이브러리 추가필요-->
