@@ -60,6 +60,17 @@
 			(SEQ_RID.NEXTVAL, #{usedRContent}, #{usedRefUId }, #{usedRWriter}, SYSDATE, SYSDATE, DEFAULT)
 		</insert>
 
+	<!-- dbdyd 2020-07-10 -->
+		<insert id="insertUsedBoard">
+			insert into USEDBOARD ( USED_NO,M_ID,USED_TITLE,USED_YN,used_price ) values (
+			seq_used_no.nextval, #{mId},#{usedTitle},'Y',0)
+		</insert>
+	
+	<update id="updateUsedBoard">
+		update USEDBOARD set 
+		   used_title = #{usedTitle}
+		where used_no=#{usedNo}
+	</update>
 </mapper>
 
 
