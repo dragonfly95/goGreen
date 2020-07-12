@@ -32,7 +32,7 @@ public class UsedBoardServiceImpl implements UsedBoardService{
 	@Override
 	public int insertUsedBoard(UsedBoard u) {
 		
-		return 0;
+		return uStore.insertUsedBoard(u);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class UsedBoardServiceImpl implements UsedBoardService{
 
 	@Override
 	public int updateUsedBoard(UsedBoard u) {
-		return 0;
+		return uStore.updateUsedBoard(u);
 	}
 
 	@Override
