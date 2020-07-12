@@ -58,4 +58,13 @@ public class UsedStoreLogic {
 			return sqlSession.insert("usedBoardMapper.insertUsedReply", u);
 		}
 
+
+	//------------------------------------
+	public int insertUsedBoard(UsedBoard u) {
+	   	return sqlSession.insert("usedBoardMapper.insertUsedBoard", u);
+	}
+
+	public int updateUsedBoard(UsedBoard u) {
+		return sqlSession.update("usedBoardMapper.updateUsedBoard", u);
+	}
 }
