@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -15,6 +16,7 @@ import org.kh.camp.used.domain.UsedReply;
 import org.kh.camp.used.service.UsedBoardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -91,14 +93,25 @@ public class UsedBoardController {
 
 	   // 수정
 	   @RequestMapping(value = "uModify.do")
-	   public ModelAndView uModify(ModelAndView mv, int usedId) {
+	   public ModelAndView uModify(ModelAndView mv, int usedId, @ModelAttribute UsedBoard u, HttpServletRequest request) {
+
+		   if("POST".equals(request.getMethod())) {
+			   uBoardService.updateUsedBoard(u);
+			   return new ModelAndView("redirect:ulist.do");
+		   }
+
 		   mv.setViewName("used/usedModify");
 		   return mv;
 	   }
 
 		// 글쓰기
 		@RequestMapping(value = "uWrite.do")
-		public ModelAndView uWrite(ModelAndView mv) {
+		public ModelAndView uWrite(ModelAndView mv, @ModelAttribute UsedBoard u, HttpServletRequest request) {
+
+			if("POST".equals(request.getMethod())) {
+				uBoardService.insertUsedBoard(u);
+				return new ModelAndView("redirect:ulist.do");
+			}
 			mv.setViewName("used/usedWrite");
 			return mv;
 		}
