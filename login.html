@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8"> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+        <meta name="author" content="">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+        <title>Document</title>
+
+        <!-- CSS -->
+        <link rel="stylesheet" href="/static/css/reset.css">
+        <link rel="stylesheet" href="/static/css/style.css">
+        <link rel="stylesheet" href="/static/css/custom.css">
+        <!-- jQuery -->
+        <script src="/static/js/jquery-3.3.1.min.js"></script>
+        <script src="/static/js/custom.js"></script>
+        <script src="/static/js/aes.js"></script>
+        <script src="/static/js/sha256.js"></script>
+        <!-- xeicon -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/xeicon@2.3.3/xeicon.min.css">
+    </head>
+
+<style>
+
+    @media screen and (min-width: 768px) {
+
+    }
+</style>
+
+<div id="wrap" class="type01">
+    <!-- 오버레이 처리 -->
+    <div id="overlay"></div>
+
+    <!-- 메인 -->
+    <div class="cont" id="p02">
+        <div class="c01">
+            <a class="btn-back" href="/"><i class="xi-angle-left"></i></a>
+            <div class="p1">교회선택</div>
+            <div class="p4">성도 여러분 환영합니다.</div>
+        </div>
+
+        <div class="c02">
+            <div class="form">
+                <div class="row">
+                    <input type="text" placeholder="이름" name="userName" maxlength=6>
+                </div>
+                <div class="row">
+                    <input type="number" placeholder="핸드폰번호" name="userPhone" 
+							oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+					        maxlength = "11">
+                    <div class="btn-secondary btn-cetify">인증하기</div>
+                </div>
+                <div class="row certify"> <!-- 인증번호 입력 활성화 class "active" -->
+                    <input type="number" placeholder="인증번호" name="userResultNum"
+                 			oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+					        maxlength = "4">
+                    <div class="btn-secondary btn-verify">입력</div>
+                </div>
+                <div class="row">
+                    <select name="ChurchNo" style="width:98%">
+                        <option value="">교회선택</option>
+                    </select>
+                    <!-- 
+                    <div class="btn-secondary">교회찾기</div>
+                     -->
+                </div>
+            </div>
+        </div>
+
+        <div class="c03">
+            <div class="cont-agree">
+                <div class="agree-item">
+                    <div class="qi-q">
+                        <span class="qiq-h btn-toggle"><i class="xi-check-circle-o"></i></span>
+                        <span class="qiq-b">이용약관 동의</span>
+                    </div>
+                    <div class="qi-a">
+                        <span class="qiq-b">
+                            제1장 : 총칙<br>
+                            제2장 : 서비스 이용계약<br>
+                            제3장 : 계약당사자의 의무<br>
+                            제4장 : 서비스 이용<br>
+                            제5장 : 계약해지 및 이용제한<br>
+                            제6장 : 기타
+                        </span>
+                    </div>
+                </div>
+                <div class="agree-item">
+                    <div class="qi-q">
+                        <span class="qiq-h btn-toggle"><i class="xi-check-circle-o"></i></span>
+                        <span class="qiq-b">개인정보 수집 이용 동의</span>
+                    </div>
+                    <div class="qi-a">
+                        <span class="qiq-b">
+                            중앙선거관리위원회는 법령의 범위안에서 선거관리·국민투표관리 또는 정당사무에 관한 규칙을 제정할 수 있으며, 법률에 저촉되지 아니하는 범위안에서 내부규율에 관한 규칙을 제정할 수 있다.
+                            <br><br>
+                            국회의 회의는 공개한다. 다만, 출석의원 과반수의 찬성이 있거나 의장이 국가의 안전보장을 위하여 필요하다고 인정할 때에는 공개하지 아니할 수 있다.
+                            <br><br>
+                            공개하지 아니한 회의내용의 공표에 관하여는 법률이 정하는 바에 의한다. 모든 국민은 행위시의 법률에 의하여 범죄를 구성하지 아니하는 행위로 소추되지 아니하며, 동일한 범죄에 대하여 거듭 처벌받지 아니한다.
+                            <br><br>
+                            군사재판을 관할하기 위하여 특별법원으로서 군사법원을 둘 수 있다. 군인 또는 군무원이 아닌 국민은 대한민국의 영역안에서는 중대한 군사상 기밀·초병·초소·유독음식물공급·포로·군용물에 관한 죄중 법률이 정한 경우와 비상계엄이 선포된 경우를 제외하고는 군사법원의 재판을 받지 아니한다.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 다음 버튼 -->
+    <div class="c-next">
+       <a href="#" onclick="return false;"><div class="btn-next">다음</div></a>
+    </div>
+
+    <!-- 팝업 -->
+    <div class="popup type01">
+        <div class="p4">입력하신 핸드폰으로 인증번호가<br>발송되었습니다.</div>
+        <div class="btn-primary btn-popup_ok">확인</div>
+    </div>
+</div>
+
+<script>
+    $(function(){
+        
+    	var result = '999999';
+    	var verifyResult = false;
+    	
+    	// 교회 목록 가져오기 
+    	$.ajax({
+            url: "api_church_list",
+            success: function (response) {
+                
+                var collection = response;
+                var str = '<option value="">교회선택</option>';
+                $.each(collection, function (i, v) { 
+                     str += '<option value="'+ v.ChurchNo +'">'+ v.ChurchName +'('+ v.ChurchArea +'/'+ v.ChurchPastor +' 목사)</option>';
+                });
+                $('[name="ChurchNo"]').html(str);
+            }, error: function (error) {
+            	alert('교회목록 가져오기 실패');
+            }
+        });
+    	
+        // 인증하기 버튼 클릭
+        $('.btn-cetify').on('click', function() {
+        	
+        	var HpNo = $('[name="userPhone"]').val();
+        	
+        	if(HpNo == '') {
+        		alert('핸드폰 번호는 필수입니다');
+        		return;
+        	}
+        	
+        	$.ajax({
+                url: "api_church_sms",
+                data: {'HpNo': HpNo },
+                success: function (response) {
+
+    				result = response.Result;
+    				console.log('result:: %s', result);
+    				
+                    $('.row.certify').addClass('active');
+                    $('.popup').slideToggle();
+                    openOverlay();
+                    
+                }, error: function (error) {
+                	debugger
+                	alert('문자발송 오류');
+                }
+            });
+        });
+        
+        // 인증번호 verify
+        $('.btn-verify').on('click', function() {
+        	
+        	var userResultNum = $('[name="userResultNum"]').val();
+        	if(userResultNum == '') {
+        		alert('인증번호를 입력해주세요');
+        		return;
+        	}
+        	if(userResultNum.length != 4) {
+        		alert('인증번호 4자리를 입력해주세요');
+        		return;
+        	}
+        	
+        	if(result != userResultNum) {
+        		alert('인증번호가 맞지 않습니다');
+        		return;
+        	} else {
+        		alert('본인인증 되었습니다');
+        		$('.row.certify').removeClass('active');
+        		result = '999999';
+        		verifyResult = true;
+        		
+        		$('[name="userPhone"]').attr('readonly', true);
+        	}
+    		
+        });
+        
+        
+        // 다음 
+        $('.btn-next').on('click', function() {
+        	
+        	var ChurchNo = $('[name="ChurchNo"]').val();
+        	var Name = $('[name="userName"]').val();
+        	var Tel = $('[name="userPhone"]').val();
+       	
+        	if(!verifyResult) {
+        		alert('핸드폰인증을 먼저 해주세요');
+        		return;
+        	}
+        	
+       		if(Name == '') {
+       			alert('이름을 입력해주세요');
+       			return;
+       		}
+       		
+       		if(Tel == '') {
+       			alert('전화번호를 입력해주세요');
+       			return;
+       		}
+
+       		if(ChurchNo == '') {
+       			alert('교회를 선택해주세요');
+       			return;
+       		}
+       		
+        	ChurchNo = CryptoJS.AES.encrypt(ChurchNo, "1234",{
+		        mode: CryptoJS.mode.CBC,
+		        padding: CryptoJS.pad.Pkcs7
+		    }).toString();
+        	Name = CryptoJS.AES.encrypt(Name, "1234",{
+		        mode: CryptoJS.mode.CBC,
+		        padding: CryptoJS.pad.Pkcs7
+		    }).toString();
+        	Tel = CryptoJS.AES.encrypt(Tel, "1234",{
+		        mode: CryptoJS.mode.CBC,
+		        padding: CryptoJS.pad.Pkcs7
+		    }).toString();
+
+       		var obj = {
+       		    "churchNo": ChurchNo,
+       		    "name": Name,
+       		    "tel": Tel
+       		};
+
+       		$.ajax({
+       		    type: 'post',
+       		    url: "api_church_userRegister",
+       		    data: obj,
+       		    success: function (response) {
+       		    	if(response.Result == 0) {
+       		    		alert(response.Message);
+       		    	} else {
+       		    		
+       		    		var UserNo = response.Result;
+                        
+                            UserNo = CryptoJS.AES.encrypt(UserNo, "1234",{
+                                mode: CryptoJS.mode.CBC,
+                                padding: CryptoJS.pad.Pkcs7
+                            }).toString();
+                        
+	       		    	localStorage.setItem('UserNo', UserNo);
+                        localStorage.setItem('ChurchNo', ChurchNo);
+                        localStorage.setItem('Name', Name);
+                        localStorage.setItem('Tel', Tel);
+                        
+	       		        alert(response.Message);
+	       		        location.href='/main';
+       		    	}
+       		    }, error: function(error) {
+       		        alert('인증 오류입니다');
+       		    }
+       		});
+
+        });
+    });
+
+</script>
